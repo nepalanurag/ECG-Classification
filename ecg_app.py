@@ -148,7 +148,6 @@ def main():
             return
         model = load_model(model_path)
         X_test, y_test = preprocess_data(df, binary=False)
-        _, X_test, _, y_test = train_test_split(X, y, test_size=0.3, random_state=28)
         pred = model.predict(X_test)
         y_pred = np.argmax(pred, axis=1)
         acc = accuracy_score(y_test, y_pred)
@@ -189,7 +188,6 @@ def main():
             return
         knn_model = joblib.load(model_path)
         X_test, y_test = preprocess_data(df, binary=False)
-        _, X_test, _, y_test = train_test_split(X, y, test_size=0.3, random_state=28)
         y_pred = knn_model.predict(X_test)
         acc = accuracy_score(y_test, y_pred)
         st.write(f"Accuracy: {acc:.4f}")
