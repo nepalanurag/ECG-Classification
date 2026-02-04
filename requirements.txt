@@ -1,6 +1,9 @@
-numpy
 pandas
+numpy
 matplotlib
+seaborn
+scikit-learn
+imbalanced-learn
 tensorflow
-tensorflow-keras
-sklearn
+joblib
+streamlit
