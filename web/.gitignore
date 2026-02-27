@@ -1,0 +1,6 @@
+# large data and intermediates: regenerate locally, not committed
+*.npy
+mitdb/
+*.log
+__pycache__/
+.ipynb_checkpoints/
