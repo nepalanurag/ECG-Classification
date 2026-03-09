@@ -2,6 +2,12 @@
 
 This project demonstrates the classification of ECG (Electrocardiogram) heartbeats using machine learning models, including Convolutional Neural Networks (CNN), Artificial Neural Networks (ANN), and K-Nearest Neighbors (KNN). The project features a Streamlit web app for interactive exploration, visualization, and model comparison.
 
+## Live demo
+
+Try it in your browser: https://ecg-classification-web.vercel.app/
+
+The full demo package (evaluation, model conversion, and the site source) lives in [`web/`](web/).
+
 ## Features
 
 - **Data Preprocessing:** Handles the MIT-BIH Arrhythmia dataset, including class balancing and binary/multiclass conversion.
