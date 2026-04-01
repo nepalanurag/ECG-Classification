@@ -41,6 +41,18 @@
   code { background: #f0f0f0; padding: 1px 5px; border-radius: 3px; font-size: 0.85em; }
   footer { margin-top: 40px; font-size: 0.8rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 12px; }
   a { color: var(--accent); }
+  .wavegrid { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+  .wave { flex: 1 1 150px; max-width: 220px; }
+  .wave canvas { width: 100%; height: 90px; border: 1px solid var(--line); border-radius: 4px; background: #fff; display: block; }
+  .wavelabel { font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; }
+  table.cmp { border-collapse: collapse; width: 100%; font-size: 0.9rem; margin: 12px 0; }
+  table.cmp th, table.cmp td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; }
+  table.cmp th { background: #f6f6f6; }
+  table.cmp td.num { font-variant-numeric: tabular-nums; }
+  table.cm { border-collapse: collapse; font-size: 0.82rem; margin: 12px 0; }
+  table.cm th, table.cm td { border: 1px solid var(--line); padding: 4px 8px; text-align: right; font-variant-numeric: tabular-nums; }
+  table.cm th { background: #f6f6f6; }
+  table.cm td.diag { background: #fdf2f1; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -89,6 +101,52 @@ entirely in your browser with ONNX Runtime Web. Nothing is uploaded anywhere.</p
 </div>
 
 <div class="card">
+  <h2 style="margin-top:0;border:none">The data</h2>
+  <p class="note">
+    The models were trained on the MIT-BIH Arrhythmia Database heartbeat set: 109,446 single
+    heartbeats, each 187 samples long, labeled into five AAMI classes. One example of each
+    class is plotted below, drawn from the sample files.
+  </p>
+  <div class="wavegrid" id="classwaves"></div>
+</div>
+
+<div class="card">
+  <h2 style="margin-top:0;border:none">Model comparison</h2>
+  <p class="note">
+    Three approaches were trained and compared: a convolutional network with Conv1D layers
+    over the raw beat, a feed-forward ANN (187 inputs, hidden layers of 256, 128 and 64 ReLU
+    units, 5-way softmax), and k-nearest neighbors on the 187-sample beat vectors. The ANN
+    is the model deployed on this page.
+  </p>
+  <table class="cmp">
+    <thead><tr><th>Model</th><th>Test accuracy</th><th>Test beats</th><th>Measured</th></tr></thead>
+    <tbody>
+      <tr><td>CNN</td><td class="num">98.7%</td><td class="num">32,834</td><td>training notebook</td></tr>
+      <tr><td>ANN (deployed)</td><td class="num">98.8%</td><td class="num">21,892</td><td>shipped ONNX model</td></tr>
+      <tr><td>KNN</td><td class="num">97.5%</td><td class="num">32,834</td><td>training notebook</td></tr>
+    </tbody>
+  </table>
+  <p class="note">
+    These are random train/test splits, which mix beats from the same patients in train and
+    test and therefore read optimistic. Confusion matrix for the deployed ANN, computed by
+    running the shipped model on the repo's 21,892-beat test file (rows: true label,
+    columns: predicted label):
+  </p>
+  <table class="cm">
+    <thead><tr><th></th><th>N</th><th>S</th><th>V</th><th>F</th><th>Q</th></tr></thead>
+    <tbody>
+      <tr><th>N</th><td class="diag">18,037</td><td>46</td><td>26</td><td>5</td><td>4</td></tr>
+      <tr><th>S</th><td>79</td><td class="diag">472</td><td>5</td><td>0</td><td>0</td></tr>
+      <tr><th>V</th><td>25</td><td>5</td><td class="diag">1,404</td><td>14</td><td>0</td></tr>
+      <tr><th>F</th><td>15</td><td>0</td><td>7</td><td class="diag">140</td><td>0</td></tr>
+      <tr><th>Q</th><td>16</td><td>0</td><td>8</td><td>0</td><td class="diag">1,584</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Most errors are supraventricular beats called normal, and fusion beats
+  called normal or ventricular, the known hard cases in this dataset.</p>
+</div>
+
+<div class="card">
   <h2 style="margin-top:0;border:none">About the model</h2>
   <p class="note">
     Feed-forward network (187 inputs, hidden layers of 256, 128 and 64 ReLU units, 5-way softmax),
@@ -98,7 +156,7 @@ entirely in your browser with ONNX Runtime Web. Nothing is uploaded anywhere.</p
     same patients in train and test, so it is optimistic. A stricter patient-grouped evaluation
     is reported in the project README.
     The browser model is the same network converted to ONNX. Full analysis, code and numbers:
-    <a href="https://github.com/nepalanurag/ecg-classification-web">github.com/nepalanurag/ecg-classification-web</a>.
+    <a href="https://github.com/nepalanurag/ECG-Classification">github.com/nepalanurag/ECG-Classification</a>.
   </p>
 </div>
 
