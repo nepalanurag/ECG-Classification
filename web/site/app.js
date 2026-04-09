@@ -179,3 +179,49 @@
     })
     .catch(function (e) { setStatus("Could not load model: " + e.message); });
 })();
+
+/* The data: one small waveform per class, drawn from the sample CSVs. */
+(function () {
+  var box = document.getElementById("classwaves");
+  if (!box) return;
+  var classes = [
+    { file: "samples/sample_0_normal_beat.csv", name: "Normal (N:0)" },
+    { file: "samples/sample_1_supraventricular_ectopic.csv", name: "Supraventricular (S:1)" },
+    { file: "samples/sample_2_ventricular_ectopic.csv", name: "Ventricular (V:2)" },
+    { file: "samples/sample_3_fusion_beat.csv", name: "Fusion (F:3)" },
+    { file: "samples/sample_4_unknown_beat.csv", name: "Unknown (Q:4)" }
+  ];
+  classes.forEach(function (c) {
+    var wrap = document.createElement("div");
+    wrap.className = "wave";
+    var label = document.createElement("div");
+    label.className = "wavelabel";
+    label.textContent = c.name;
+    var cv = document.createElement("canvas");
+    cv.width = 300; cv.height = 90;
+    wrap.appendChild(label);
+    wrap.appendChild(cv);
+    box.appendChild(wrap);
+    fetch(c.file).then(function (r) { return r.text(); }).then(function (t) {
+      var vals = t.trim().split(/[\s,;]+/).map(Number)
+        .filter(function (v) { return !isNaN(v); });
+      if (!vals.length) return;
+      var ctx = cv.getContext("2d");
+      var W = cv.width, H = cv.height;
+      var min = Math.min.apply(null, vals), max = Math.max.apply(null, vals);
+      var span = (max - min) || 1;
+      ctx.strokeStyle = "#e5e5e5";
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(0, H / 2); ctx.lineTo(W, H / 2); ctx.stroke();
+      ctx.strokeStyle = "#b3352b";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      vals.forEach(function (v, i) {
+        var x = (i / (vals.length - 1)) * W;
+        var y = H - 6 - ((v - min) / span) * (H - 12);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+    });
+  });
+})();
