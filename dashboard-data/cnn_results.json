@@ -1,0 +1,113 @@
+{
+  "source_notebook": "ecg-cnn.ipynb",
+  "architecture": "Conv1D(32,3)-Conv1D(64,3)-Conv1D(128,5) relu, MaxPool1D, Dropout(0.6), Flatten, Dense(512)-Dense(1024) relu, softmax, Adam, 10 epochs, batch 64, 20% validation",
+  "five_class": {
+    "test_accuracy": 0.9870561003837486,
+    "per_class": {
+      "0": {
+        "precision": 0.99,
+        "recall": 1.0,
+        "f1": 0.99,
+        "support": 27096
+      },
+      "1": {
+        "precision": 0.91,
+        "recall": 0.81,
+        "f1": 0.86,
+        "support": 852
+      },
+      "2": {
+        "precision": 0.97,
+        "recall": 0.97,
+        "f1": 0.97,
+        "support": 2161
+      },
+      "3": {
+        "precision": 0.91,
+        "recall": 0.79,
+        "f1": 0.85,
+        "support": 232
+      },
+      "4": {
+        "precision": 1.0,
+        "recall": 0.99,
+        "f1": 0.99,
+        "support": 2493
+      }
+    },
+    "confusion_matrix": [
+      [
+        26980,
+        63,
+        36,
+        9,
+        8
+      ],
+      [
+        151,
+        690,
+        10,
+        0,
+        1
+      ],
+      [
+        55,
+        3,
+        2090,
+        10,
+        3
+      ],
+      [
+        24,
+        1,
+        23,
+        184,
+        0
+      ],
+      [
+        20,
+        2,
+        6,
+        0,
+        2465
+      ]
+    ]
+  },
+  "binary": {
+    "label_map": {
+      "0": "normal",
+      "1": "abnormal (S/V/F/Q)"
+    },
+    "class_counts": {
+      "0": 90589,
+      "1": 16078
+    },
+    "test_accuracy": 0.9948833526222818,
+    "per_class": {
+      "0": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 27948
+      },
+      "1": {
+        "precision": 0.99,
+        "recall": 0.97,
+        "f1": 0.98,
+        "support": 4886
+      }
+    },
+    "confusion_matrix": [
+      [
+        27910,
+        38
+      ],
+      [
+        130,
+        4756
+      ]
+    ],
+    "roc_auc": 0.9860168504270342,
+    "weights": "ecg_cnn_binary_best.h5"
+  }
+}
