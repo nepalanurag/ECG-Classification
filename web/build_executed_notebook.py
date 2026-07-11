@@ -41,7 +41,7 @@ import numpy as np
 yt = np.load("grouped_y_true.npy"); yp = np.load("grouped_y_pred.npy")
 
 md("# ECG heartbeat classification: from a leaky 98.8% to an honest estimate\n\n"
-   "I take a pre-trained heartbeat classifier (a small dense network trained on the MIT-BIH "
+   "## Background\n\nI take a pre-trained heartbeat classifier (a small dense network trained on the MIT-BIH "
    "Arrhythmia Database) and do three things the original project did not: measure uncertainty "
    "with bootstrap confidence intervals, check whether its confidence scores mean what they say "
    "(calibration), and re-evaluate it the honest way, grouped by patient, so beats from the same "
@@ -56,7 +56,7 @@ tf.get_logger().setLevel("ERROR")
 print("tensorflow", tf.__version__)""",
 "tensorflow 2.18.0\n")
 
-md("## 1. The data\n\n"
+md("## Setup: the data\n\n"
    "The MIT-BIH Arrhythmia Database (Moody & Mark 2001, via PhysioNet) is 48 half-hour "
    "two-lead ECG recordings from 47 subjects, annotated beat by beat by cardiologists "
    "(about 110,000 beats). I use the heartbeat-level version: each beat is a window of "
@@ -81,7 +81,7 @@ md("The classes are badly imbalanced: normal beats outnumber fusion beats more t
    "I keep this in mind everywhere below. Accuracy alone would let a model ignore the rare "
    "classes, so I report per-class precision, recall and F1 throughout.")
 
-md("## 2. The model\n\n"
+md("## Method: the model\n\n"
    "The source repo's best model is a feed-forward network: 187 inputs, dense layers of "
    "256, 128 and 64 ReLU units, and a 5-way softmax. It is small (1.1 MB), which is why I "
    "chose it for the browser demo over the 80 MB CNN variants.")
@@ -101,7 +101,7 @@ _________________________________________________________________
 Total params: 89,605
 """)
 
-md("## 3. Evaluation on the shipped test set\n\n"
+md("## Results: evaluation on the shipped test set\n\n"
    "First I evaluate the fixed model on `mitbih_test.csv`, the same split the original project "
    "reported 98.13% on.")
 
@@ -114,7 +114,7 @@ print(f"accuracy: {acc:.4f}")""",
 f"accuracy: {acc['value']:.4f}\n",
 png_paths=["figures/confusion_matrix.png"])
 
-md("## 4. Bootstrap confidence intervals\n\n"
+md("## Method: bootstrap confidence intervals\n\n"
    "A point estimate without uncertainty is hard to trust, especially for the rare classes "
    "(F has only 162 beats). I use the percentile bootstrap: resample the test set with "
    "replacement 2,000 times, recompute each metric, and take the 2.5th and 97.5th percentiles. "
@@ -132,7 +132,7 @@ code_with_output(
 print(bootstrap_table)""",
 "\n".join(lines) + "\n")
 
-md("## 5. Calibration\n\n"
+md("## Method: calibration\n\n"
    "A classifier can be accurate yet miscalibrated, reporting 99% confidence on beats it gets "
    "right only 90% of the time. I check this with a reliability diagram and the expected "
    "calibration error (ECE), then fit temperature scaling (Guo et al. 2017): a single parameter "
@@ -145,7 +145,7 @@ print(open("calibration_summary.txt").read())""",
 cal,
 png_paths=["figures/calibration_curve.png"])
 
-md("## 6. The leakage problem, and the honest evaluation\n\n"
+md("## Results: the leakage problem, and the honest evaluation\n\n"
    "Here is the catch with the 98.8% above. The original project concatenated train and test "
    "and split randomly, so beats from the same patient appear on both sides. Beats from one "
    "patient share electrode placement, heart geometry and baseline wander, so the model can "
@@ -187,7 +187,7 @@ md("### Leaky vs honest, side by side\n\n"
    "is the honest one to quote for new patients. Note the rare classes (S, F) are effectively "
    "not learned without rebalancing; the model is honest about what it can and cannot do.")
 
-md("## 7. ONNX conversion for the browser demo\n\n"
+md("## Method: ONNX conversion for the browser demo\n\n"
    "The demo site runs the network in the visitor's browser with ONNX Runtime Web, so no "
    "server and no data upload are needed. I converted the Keras model with tf2onnx and "
    "verified the ONNX outputs match the Keras outputs to 1e-7 with 100% argmax agreement on "
@@ -200,7 +200,7 @@ print(onnx_check)""",
 "max abs diff ONNX vs Keras: 1.19e-07\n"
 "argmax agreement on 500 beats: 1.0\n")
 
-md("## 8. Sample beats for the demo\n\n"
+md("## Method: sample beats for the demo\n\n"
    "Five beats (one per class) with precomputed model outputs go into `site/samples/` "
    "so the demo works instantly. I picked correctly classified beats near the median "
    "confidence of their class, so they are typical rather than cherry-picked easy wins.")
@@ -216,7 +216,7 @@ for s in meta["samples"]:
 "Unknown beat -> Unknown beat (100.0%)\n",
 png_paths=["figures/sample_beats.png"])
 
-md("## 9. What I conclude\n\n"
+md("## Takeaway\n\n"
    "- The fixed model reproduces the original result on the shipped split: about 98.8% accuracy, "
    "with tight bootstrap intervals on the common classes and wider ones on the rare classes.\n"
    "- Its confidence scores were already decent (ECE 0.007) and temperature scaling (T=1.74) "
