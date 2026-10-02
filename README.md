@@ -40,6 +40,7 @@ The full demo package (evaluation, model conversion, and the site source) lives 
 3. **Download the MIT-BIH dataset:**
 
    - Place `mitbih_train.csv` and `mitbih_test.csv` in the project root directory.
+   - These are the heartbeat-level MIT-BIH CSVs (one row per beat: 187 ECG samples plus a label, from the MIT-BIH Arrhythmia Database via PhysioNet). `mitbih_test.csv` (21,892 beats) is already in the repo; `mitbih_train.csv` is not, so grab the matching heartbeat-level CSV if you want to retrain.
 
 4. **Train the models:**
 
