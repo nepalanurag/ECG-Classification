@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix, accuracy_score, classification_report, roc_curve, auc
 from sklearn.model_selection import train_test_split
-from imblearn.over_sampling import SMOTE
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Flatten, Dense, Conv1D, MaxPool1D, Dropout
 

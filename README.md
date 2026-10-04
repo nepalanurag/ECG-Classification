@@ -10,7 +10,7 @@ The full demo package (evaluation, model conversion, and the site source) lives 
 
 ## Features
 
-- **Data Preprocessing:** Handles the MIT-BIH Arrhythmia dataset, including class balancing and binary/multiclass conversion.
+- **Data Preprocessing:** Handles the MIT-BIH Arrhythmia dataset, including binary/multiclass label conversion. (The notebooks compute a SMOTE-balanced copy of the training set for reference, but all models train on the original unbalanced data.)
 - **Model Training:** Trains and evaluates CNN, ANN, and KNN models for heartbeat classification.
 - **Model Selection:** Automatically saves and uses only the best-performing model for each algorithm.
 - **Interactive Web App:**
@@ -21,10 +21,10 @@ The full demo package (evaluation, model conversion, and the site source) lives 
 
 ## Project Structure
 
-- `ecg_app.py` — Main Streamlit app for data exploration, prediction, and comparison
-- `ecg-cnn.ipynb` — Jupyter notebook for CNN model training and evaluation
-- `ecg-classification.ipynb` — Jupyter notebook for ANN and KNN model training and evaluation
-- `requirements.txt` — List of required Python packages
+- `ecg_app.py`: Main Streamlit app for data exploration, prediction, and comparison
+- `ecg-cnn.ipynb`: Jupyter notebook for CNN model training and evaluation
+- `ecg-classification.ipynb`: Jupyter notebook for ANN and KNN model training and evaluation
+- `requirements.txt`: List of required Python packages
 
 ## Setup Instructions
 
