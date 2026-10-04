@@ -44,7 +44,9 @@ for c in classes:
     yb_c = (y == c)
     pb_c = (pred == c)
     tp = int((pb_c & yb_c).sum()); fp = int((pb_c & ~yb_c).sum()); fn = int((~pb_c & yb_c).sum())
-    prec = tp / (tp + fp); rec = tp / (tp + fn); f1 = 2 * prec * rec / (prec + rec)
+    prec = tp / (tp + fp) if tp + fp else 0.0
+    rec = tp / (tp + fn) if tp + fn else 0.0
+    f1 = 2 * prec * rec / (prec + rec) if prec + rec else 0.0
     d = {"n": int(yb_c.sum()), "precision": {}, "recall": {}, "f1": {}}
     for m, v in [("precision", prec), ("recall", rec), ("f1", f1)]:
         key = {"precision": "P", "recall": "R", "f1": "F1"}[m]
