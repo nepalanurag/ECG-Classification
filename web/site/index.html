@@ -111,6 +111,23 @@ entirely in your browser with ONNX Runtime Web. Nothing is uploaded anywhere.</p
 </div>
 
 <div class="card">
+  <h2 style="margin-top:0;border:none">How well does it really work?</h2>
+  <p class="note">
+    The honest headline comes from a stricter test: 5-fold cross-validation grouped by
+    patient record, so no patient's beats appear on both sides of any split (109,406 beats
+    reconstructed from the 48 MIT-BIH records). Pooled accuracy is <strong>0.87</strong>,
+    with per-class F1 of N 0.93, V 0.58, Q 0.68, and S/F near zero. The rare beat classes
+    are the hard part once patient leakage is removed.
+  </p>
+  <p class="note">
+    The 98%+ figures in the comparison table below are random train/test splits, which mix
+    beats from the same patients in train and test and read optimistic. They are kept as
+    the in-split reference; the grouped number above is the one to quote. Full numbers in
+    the <a href="https://github.com/nepalanurag/ECG-Classification">repo README</a>.
+  </p>
+</div>
+
+<div class="card">
   <h2 style="margin-top:0;border:none">Model comparison</h2>
   <p class="note">
     Three approaches were trained and compared: a convolutional network with Conv1D layers
@@ -144,6 +161,11 @@ entirely in your browser with ONNX Runtime Web. Nothing is uploaded anywhere.</p
   </table>
   <p class="note">Most errors are supraventricular beats called normal, and fusion beats
   called normal or ventricular, the known hard cases in this dataset.</p>
+  <p class="note">
+    Extended evaluation in the notebook: the binary experiment now also trains a
+    from-scratch binary CNN (same convolutional stack, dedicated 1-unit sigmoid head) as
+    a control for the transfer-learning variant. Details in the repo.
+  </p>
 </div>
 
 <div class="card">
@@ -153,8 +175,9 @@ entirely in your browser with ONNX Runtime Web. Nothing is uploaded anywhere.</p
     trained on the MIT-BIH Arrhythmia Database heartbeat set (109,446 beats, five AAMI classes:
     normal, supraventricular ectopic, ventricular ectopic, fusion, unknown).
     On a held-out-style test split it reaches 98.8% accuracy, but that split mixes beats from the
-    same patients in train and test, so it is optimistic. A stricter patient-grouped evaluation
-    is reported in the project README.
+    same patients in train and test, so it is optimistic. The stricter patient-grouped
+    evaluation (pooled accuracy 0.87) is summarized in the "How well does it really work?"
+    section above.
     The browser model is the same network converted to ONNX. Full analysis, code and numbers:
     <a href="https://github.com/nepalanurag/ECG-Classification">github.com/nepalanurag/ECG-Classification</a>.
   </p>
