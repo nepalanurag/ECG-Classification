@@ -8,6 +8,12 @@ Try it in your browser: https://ecg-classification-web.vercel.app/
 
 The full demo package (evaluation, model conversion, and the site source) lives in [`web/`](web/).
 
+## Evaluation
+
+The headline numbers are the honest ones: 5-fold GroupKFold grouped by patient record (inter-patient protocol, 109,406 beats reconstructed from the 48 MIT-BIH records) gives **pooled accuracy 0.87** (per-fold 0.90, 0.93, 0.79, 0.79, 0.93), with per-class F1 of N 0.93, V 0.58, Q 0.68, and S/F near zero — the rare classes are the hard part once patient leakage is removed. Full table with bootstrap CIs in [`dashboard-data/honest_evaluation.json`](dashboard-data/honest_evaluation.json) and [`web/REPORT.md`](web/REPORT.md).
+
+The notebook figures (CNN 98.7% 5-class, binary 99.5%) are reported on a random 70/30 split, which is optimistic because beats from the same patient land on both sides of the split. They are kept as the in-split reference; the grouped-CV number above is the one to quote.
+
 ## Features
 
 - **Data Preprocessing:** Handles the MIT-BIH Arrhythmia dataset, including binary/multiclass label conversion. (The notebooks compute a SMOTE-balanced copy of the training set for reference, but all models train on the original unbalanced data.)
@@ -45,6 +51,7 @@ The full demo package (evaluation, model conversion, and the site source) lives 
 4. **Train the models:**
 
    - Run the Jupyter notebooks (`ecg-cnn.ipynb` and `ecg-classification.ipynb`) to train and save the best models.
+   - Headless equivalent: `jupyter nbconvert --to notebook --execute ecg-cnn.ipynb --output ecg-cnn.executed.ipynb` (needs `mitbih_train.csv` next to the notebook; the from-scratch binary CNN section trains in the same run and saves `ecg_cnn_binary_scratch_best.h5`).
 
 5. **Launch the Streamlit app:**
    ```bash
